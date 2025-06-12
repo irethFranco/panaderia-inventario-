@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión para Panadería</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1e4d8 100%);
+            color: #2d2d2d;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: #7c4a1e;
+            color: #fff;
+            padding: 32px 0 16px 0;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            position: relative;
+        }
+        
+        header img {
+            position: absolute;
+            top: 24px;
+            left: 48px;
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            background: #fff;
+            z-index: 10;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+        
+        nav {
+            margin-top: 12px;
+        }
+        
+        nav a {
+            color: #fff;
+            margin: 0 24px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+        }
+        
+        nav a:hover {
+            color: #ffd700;
+            border-bottom: 2px solid #ffd700;
+        }
+        
+        .main-content {
+            max-width: 1200px;
+            margin: 40px auto 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: space-between;
+        }
+        
+        .card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            padding: 32px 28px;
+            flex: 1 1 350px;
+            min-width: 340px;
+            margin-bottom: 24px;
+        }
+        
+        .card h2 {
+            margin-top: 0;
+            color: #7c4a1e;
+            font-size: 1.5rem;
+        }
+        
+        input, select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #d1bfa7;
+            margin-bottom: 18px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background: #f8f6f3;
+            transition: border 0.2s;
+        }
+        
+        input:focus, select:focus {
+            border: 1.5px solid #7c4a1e;
+            outline: none;
+        }
+        
+        button, input[type="submit"] {
+            background: linear-gradient(90deg, #a97c50 0%, #7c4a1e 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 2px 8px rgba(124,74,30,0.08);
+        }
+        
+        button:hover, input[type="submit"]:hover {
+            background: linear-gradient(90deg, #7c4a1e 0%, #a97c50 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        
+        ul {
+            padding-left: 20px;
+        }
+        
+        footer {
+            background: #7c4a1e;
+            color: #fff;
+            text-align: center;
+            padding: 18px 0;
+            border-radius: 0 0 24px 24px;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+            position: static;
+            z-index: 2;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .report-table th, .report-table td {
+            padding: 12px 16px;
+            text-align: left;
+        }
+        
+        .report-table th {
+            background: #f1e4d8;
+            color: #7c4a1e;
+            font-weight: 700;
+        }
+        
+        .report-table tr:nth-child(even) {
+            background: #f8f6f3;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+                gap: 0;
+            }
+            .card {
+                min-width: unset;
+                margin-bottom: 18px;
+            }
+        }
+        
+        .catalogo {
+            width: 100%;
+            margin-bottom: 32px;
+        }
+        
+        .catalogo h2 {
+            margin-top: 0;
+            padding-top: 32px;
+            color: #7c4a1e;
+            margin-bottom: 24px;
+            font-size: 2rem;
+            text-align: left;
+            font-weight: 700;
+        }
+        
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 28px;
+        }
+        
+        .producto-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.15s, box-shadow 0.15s;
+            cursor: pointer;
+        }
+        
+        .producto-card:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 8px 32px rgba(124,74,30,0.13);
+        }
+        
+        .producto-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background: #f1e4d8;
+        }
+        
+        .producto-info {
+            padding: 18px 14px 14px 14px;
+            text-align: center;
+        }
+        
+        .producto-info h3 {
+            margin: 0 0 8px 0;
+            color: #7c4a1e;
+            font-size: 1.2rem;
+        }
+        
+        .producto-info .precio {
+            color: #a97c50;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .producto-info .desc {
+            color: #555;
+            font-size: 0.98rem;
+            margin-bottom: 0;
+        }
+        
+        .pagina-principal {
+            flex: 1 0 auto;
+            display: flex;
+            align-items: flex-start;
+            min-height: 0;
+        }
+        
+        .bienvenida-carrusel {
+            min-width: 340px;
+            max-width: 450px;
+            width: 100%;
+            height: 100%;
+            background: none;
+            border-radius: 18px 0 0 18px;
+            box-shadow: none;
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+            position: relative;
+        }
+        
+        .bienvenida-fondo {
+            width: 100%;
+            height: 100%;
+            background: url('imagenes/bienvenida.png') center center/cover no-repeat;
+            border-radius: 18px 0 0 18px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bienvenida-overlay {
+            background: rgba(255,255,255,0.85);
+            border-radius: 24px;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+            padding: 24px 18px 18px 18px;
+            max-width: 350px;
+            margin: 40px auto 0 auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .logo-bienvenida {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 50%;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+        
+        .titulo-bienvenida {
+            font-size: 1.3rem;
+            color: #7c4a1e;
+            margin-bottom: 18px;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+        
+        .titulo-carrusel {
+            font-size: 1.1rem;
+            color: #7c4a1e;
+            margin-bottom: 10px;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .texto-carrusel {
+            color: #222;
+            font-size: 0.98rem;
+            margin-bottom: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        .carrusel {
+            position: relative;
+            min-height: 180px;
+            margin-bottom: 18px;
+        }
+        
+        .slide {
+            display: none;
+            animation: fade 0.7s;
+        }
+        
+        .slide.activo {
+            display: block;
+        }
+        
+        @keyframes fade {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+        
+        .controles-carrusel {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+        
+        .controles-carrusel button {
+            background: #a97c50;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .controles-carrusel button:hover {
+            background: #7c4a1e;
+        }
+        
+        @media (max-width: 1100px) {
+            .pagina-principal {
+                flex-direction: column;
+                height: auto;
+            }
+            .bienvenida-carrusel {
+                position: static;
+                width: 100%;
+                max-width: 100%;
+                border-radius: 18px 18px 0 0;
+                margin-bottom: 32px;
+            }
+            .panel-derecho {
+                padding: 0 10px;
+            }
+        }
+        
+        .panel-derecho {
+            flex: 1 1 auto;
+            padding: 0 32px 0 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        
+        .catalogo, .registro-ventas, .tabla-ventas {
+            margin-bottom: 32px;
+        }
+        
+        .logo-panaderia {
+            position: absolute;
+            top: 24px;
+            left: 48px;
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            background: #fff;
+            z-index: 10;
+        }
+        
+        header {
+            position: relative;
+        }
+
+        /* --- Responsive para tablets y celulares, manteniendo la estructura igual --- */
+        @media (max-width: 1100px) {
+            .productos-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .pagina-principal {
+                flex-direction: row;
+            }
+            .bienvenida-carrusel {
+                max-width: 40vw;
+                min-width: 200px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .productos-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .pagina-principal {
+                flex-direction: row;
+            }
+            .bienvenida-carrusel {
+                min-width: 120px;
+                max-width: 40vw;
+                padding: 0;
+            }
+            .bienvenida-overlay {
+                max-width: 90vw;
+                padding: 10px 2vw;
+            }
+            .catalogo h2 {
+                font-size: 1.1rem;
+                text-align: center;
+            }
+            .producto-card img {
+                height: 90px;
+            }
+            header h1 {
+                font-size: 1.1rem;
+            }
+            nav a {
+                font-size: 0.9rem;
+                margin: 0 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="imagenes/panaderia donde laura.png" alt="Logo Panadería Donde Laura" class="logo-panaderia">
+        <h1>Panadería Donde Laura</h1>
+        <nav>
+            <a href="#catalogo">Catálogo</a>
+            <a href="#registro-ventas">Ventas</a>
+            <a href="#inventario">Inventario</a>
+        </nav>
+    </header>
+
+    <div class="pagina-principal">
+        <aside class="bienvenida-carrusel">
+            <div class="bienvenida-fondo">
+                <div class="bienvenida-overlay">
+                    <img src="imagenes/panaderia donde laura.png" alt="Logo Panadería Donde Laura" class="logo-bienvenida">
+                    <h2 class="titulo-bienvenida">Bienvenido a<br>Panadería Donde Laura</h2>
+                    <div class="carrusel" id="carrusel">
+                        <div class="slide activo">
+                            <h3 class="titulo-carrusel">MISIÓN</h3>
+                            <p class="texto-carrusel">
+                                Ofrecer productos de panadería frescos, deliciosos y de alta calidad, brindando un excelente servicio a nuestros clientes y contribuyendo al bienestar de la comunidad.
+                            </p>
+                        </div>
+                        <div class="slide">
+                            <h3 class="titulo-carrusel">VISIÓN</h3>
+                            <p class="texto-carrusel">
+                                Ser la panadería preferida de la región, reconocida por la innovación, el sabor y la calidez en la atención, creciendo de la mano de nuestros clientes y colaboradores.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <main class="panel-derecho">
+            <section class="catalogo" id="catalogo-section">
+                <h2>Catálogo de Productos</h2>
+                <div class="productos-grid">
+                    <div class="producto-card" data-producto="pan-frances" data-precio="2000">
+                        <img src="imagenes/pan frances.png" alt="Pan francés">
+                        <div class="producto-info">
+                            <h3>Pan francés</h3>
+                            <p class="precio">$2000</p>
+                            <p class="desc">Clásico pan crocante, ideal para desayunos y acompañar comidas.</p>
+                        </div>
+                    </div>
+                    <div class="producto-card" data-producto="pan-bono" data-precio="2500">
+                        <img src="imagenes/pan de bono.png" alt="Pan de bono">
+                        <div class="producto-info">
+                            <h3>Pan de bono</h3>
+                            <p class="precio">$2500</p>
+                            <p class="desc">Delicioso panecillo de queso, suave y esponjoso.</p>
+                        </div>
+                    </div>
+                    <div class="producto-card" data-producto="roscas" data-precio="1500">
+                        <img src="imagenes/Roscas.png" alt="Roscas">
+                        <div class="producto-info">
+                            <h3>Roscas</h3>
+                            <p class="precio">$1500</p>
+                            <p class="desc">Roscas dulces, perfectas para acompañar el café.</p>
+                        </div>
+                    </div>
+                    <div class="producto-card" data-producto="pan-arequipe" data-precio="1000">
+                        <img src="imagenes/pan de arequipe.png" alt="Pan relleno">
+                        <div class="producto-info">
+                            <h3>Pan relleno de arequipe</h3>
+                            <p class="precio">$1000</p>
+                            <p class="desc">Pan relleno de arequipe, bocadillo o frutas.</p>
+                        </div>
+                    </div>
+                    <div class="producto-card" data-producto="pan-rollito" data-precio="1500">
+                        <img src="imagenes/pan rollito.png" alt="Pan rollito">
+                        <div class="producto-info">
+                            <h3>Pan rollito</h3>
+                            <p class="precio">$1500</p>
+                            <p class="desc">Pan rollito crocante y crujiente.</p>
+                        </div>
+                    </div>
+                    <div class="producto-card" data-producto="croissant" data-precio="800">
+                        <img src="imagenes/croissant.png" alt="Croissant">
+                        <div class="producto-info">
+                            <h3>Croissant</h3>
+                            <p class="precio">$800</p>
+                            <p class="desc">Croissant clásico, ideal para desayunos y meriendas.</p>
+                        </div>
+                    </div>
+                    <div class="producto-card" data-producto="corazones" data-precio="1000">
+                        <img src="imagenes/corazones.png" alt="Corazones">
+                        <div class="producto-info">
+                            <h3>Corazones</h3>
+                            <p class="precio">$1000</p>
+                            <p class="desc">Deliciosos corazones de chocolate.</p>
+                        </div>
+                    </div>
+                    <div class="producto-card" data-producto="palitos-queso" data-precio="1200">
+                        <img src="imagenes/palitos de queso.png" alt="Palitos de queso">
+                        <div class="producto-info">
+                            <h3>Palitos de queso</h3>
+                            <p class="precio">$1200</p>
+                            <p class="desc">Palitos de queso crocante y salado.</p>
+                        </div>
+                    </div>
+                    <div class="producto-card" data-producto="pasteles" data-precio="35000">
+                        <img src="imagenes/pasteles.png" alt="Pasteles">
+                        <div class="producto-info">
+                            <h3>Pasteles</h3>
+                            <p class="precio">$35000</p>
+                            <p class="desc">Pasteles variados, perfectos para compartir.</p>
+                        </div>
+                    </div>
+                    <div class="producto-card" data-producto="pan-queso" data-precio="1000">
+                        <img src="imagenes/pan de queso.png" alt="Pan de queso">
+                        <div class="producto-info">
+                            <h3>Pan de queso</h3>
+                            <p class="precio">$1000</p>
+                            <p class="desc">Pan de queso fresco y esponjoso.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="ventas" id="ventas-section" style="display:none;">
+                <h2>Registro de Ventas</h2>
+                <form id="ventaForm">
+                    <label for="producto">Producto:</label>
+                    <select id="producto" name="producto">
+                        <option value="">Seleccione un producto</option>
+                        <option value="pan-frances">Pan francés</option>
+                        <option value="pan-bono">Pan de bono</option>
+                        <option value="roscas">Roscas</option>
+                        <option value="pan-arequipe">Pan relleno de arequipe</option>
+                        <option value="pan-rollito">Pan rollito</option>
+                        <option value="croissant">Croissant</option>
+                        <option value="corazones">Corazones</option>
+                        <option value="palitos-queso">Palitos de queso</option>
+                        <option value="pasteles">Pasteles</option>
+                        <option value="pan-queso">Pan de queso</option>
+                    </select>
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" id="cantidad" name="cantidad" min="1">
+                    <label for="precio">Precio:</label>
+                    <input type="number" id="precio" name="precio" min="0">
+                    <button type="submit">Registrar Venta</button>
+                </form>
+            </section>
+            <section class="inventario" id="inventario-section" style="display:none;">
+                <h2>Compras Totales</h2>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoReporte">
+                        <!-- Más filas según las ventas -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        © 2025 Panadería Donde Laura
+    </footer>
+
+    <script>
+        const precios = {
+            "pan-frances": 2000,
+            "pan-bono": 2500,
+            "roscas": 1500,
+            "pan-arequipe": 1000,
+            "pan-rollito": 1500,
+            "croissant": 800,
+            "corazones": 1000,
+            "palitos-queso": 1200,
+            "pasteles": 35000,
+            "pan-queso": 1000
+        };
+
+        let ventas = JSON.parse(localStorage.getItem('ventas')) || [];
+
+        function guardarVentas() {
+            localStorage.setItem('ventas', JSON.stringify(ventas));
+        }
+
+        function generarReporte() {
+            const cuerpo = document.getElementById('cuerpoReporte');
+            cuerpo.innerHTML = '';
+            ventas.forEach(v => {
+                const fila = `<tr>
+                    <td>${v.producto}</td>
+                    <td>${v.cantidad}</td>
+                    <td>$${v.precio.toFixed(2)}</td>
+                    <td>$${(v.cantidad * v.precio).toFixed(2)}</td>
+                </tr>`;
+                cuerpo.innerHTML += fila;
+            });
+        }
+
+        document.getElementById('producto').addEventListener('change', function() {
+            const valor = this.value;
+            const precioInput = document.getElementById('precio');
+            if (precios[valor]) {
+                precioInput.value = precios[valor];
+            } else {
+                precioInput.value = '';
+            }
+        });
+
+        document.getElementById('ventaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const productoSelect = document.getElementById('producto');
+            const producto = productoSelect.options[productoSelect.selectedIndex].text;
+            const cantidad = parseInt(document.getElementById('cantidad').value);
+            const precio = parseFloat(document.getElementById('precio').value);
+            if (!producto || isNaN(cantidad) || isNaN(precio)) return;
+            ventas.push({ producto, cantidad, precio });
+            guardarVentas();
+            generarReporte();
+            this.reset();
+        });
+
+        // Inicializar reporte al cargar
+        generarReporte();
+
+        function mostrarSeccion(seccion) {
+            document.getElementById('catalogo-section').style.display = (seccion === 'catalogo') ? 'block' : 'none';
+            document.getElementById('ventas-section').style.display = (seccion === 'ventas') ? 'block' : 'none';
+            document.getElementById('inventario-section').style.display = (seccion === 'inventario') ? 'block' : 'none';
+        }
+
+        // Enlaces del menú
+        document.querySelector('a[href="#catalogo"]').onclick = function() { mostrarSeccion('catalogo'); };
+        document.querySelector('a[href="#registro-ventas"]').onclick = function() { mostrarSeccion('ventas'); };
+        document.querySelector('a[href="#inventario"]').onclick = function() { mostrarSeccion('inventario'); };
+
+        // Mostrar catálogo por defecto al cargar
+        mostrarSeccion('catalogo');
+
+        // Carrusel automático para la bienvenida
+        (function() {
+            const slides = document.querySelectorAll('.bienvenida-carrusel .slide');
+            let index = 0;
+            setInterval(() => {
+                slides[index].classList.remove('activo');
+                index = (index + 1) % slides.length;
+                slides[index].classList.add('activo');
+            }, 4000);
+        })();
+
+        document.querySelectorAll('.producto-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Obtén el valor del producto y precio
+                const producto = this.getAttribute('data-producto');
+                const precio = this.getAttribute('data-precio');
+                // Selecciona el producto en el formulario
+                const select = document.getElementById('producto');
+                select.value = producto;
+                // Autocompleta el precio
+                document.getElementById('precio').value = precio;
+                // Limpia la cantidad
+                document.getElementById('cantidad').value = '';
+                // Mueve la vista al formulario de ventas
+                document.getElementById('ventas-section').style.display = 'block';
+                document.getElementById('catalogo-section').style.display = 'none';
+                document.getElementById('inventario-section').style.display = 'none';
+                // Opcional: desplaza la vista al formulario
+                document.getElementById('ventas-section').scrollIntoView({behavior: 'smooth'});
+            });
+        });
+    </script>
+</body>
+</html>
